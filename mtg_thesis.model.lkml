@@ -52,4 +52,21 @@ explore: types {
 #Useful Models
 
 explore: current_price {
+  persist_with: prices_datagroup
+  join: cards_collection {
+    sql_on: ${current_price.multiverse_id}=${cards_collection.multiverse_id} ;;
+    relationship: one_to_one
+  }
+}
+
+explore: pricing_history {
+  persist_with: prices_datagroup
+  join: cards_collection {
+    sql_on: ${pricing_history.multiverse_id}=${cards_collection.multiverse_id} ;;
+    relationship: many_to_one
+  }
+}
+
+explore: cards_gameplay {
+
 }

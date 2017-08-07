@@ -36,10 +36,16 @@ view: prices {
 
 view: current_price {
   derived_table: {
-    sql: SELECT multiverse_id as multiverse_id, usd as most_recent_price, MAX(date) as most_recent_data
-         FROM hilary_thesis.prices
-        group by 1,2;;
+    sql:SELECT prices_a.multiverse_id as multiverse_id, prices_a.usd as most_recent_price, prices_a.date as most_recent_data
+        FROM hilary_thesis.prices as prices_a
+        INNER JOIN
+          (SELECT MAX(date) as date, multiverse_id
+          FROM hilary_thesis.prices
+          group by multiverse_id) as prices_b
+        on prices_a.date = prices_b.date
+        and prices_a.multiverse_id = prices_b.multiverse_id;;
   }
+
 dimension: multiverse_id{
   type: number
   primary_key: yes
@@ -122,7 +128,10 @@ measure: avg_price {
   sql: ${price} ;;
 }
 
-
+measure: min_max_spread{
+  type: number
+  sql: ${max_price}-${min_price} ;;
+}
 
 
 
