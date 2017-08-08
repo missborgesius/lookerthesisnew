@@ -1,5 +1,6 @@
 view: cards_gameplay {
   derived_table: {
+    sql_trigger_value: 1 ;;
     sql:SELECT ROW_NUMBER() OVER (ORDER BY cards_flat.name) as id,
                cards_flat.toughness as toughness,
                 cards_flat.power as power,
@@ -14,9 +15,7 @@ view: cards_gameplay {
                 cards_flat.layout as layout,
                 sets.name as set_name,
                 sets.released_at as first_release
-#                 subtypes.name as subtype
                 FROM cards_flat
-#                 JOIN subtypes on cards_flat.type_line LIKE CONCAT("%",subtypes.name,"%")
                 JOIN sets on cards_flat.set_id = sets.code
                 INNER JOIN (
                     SELECT sets.code, MIN(sets.released_at) as min_date
@@ -100,8 +99,14 @@ view: cards_gameplay {
     sql: ${TABLE}.first_released ;;
   }
 
+  dimension: type{
+    type: string
+    sql: REGEXP_EXTRACT(${type_line},'^([A-Za-z]* ) [—$]');;
+  }
+
   measure: count {
     type: count
+    drill_fields: [name, oracle_text]
   }
 
   }

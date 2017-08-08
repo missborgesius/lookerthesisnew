@@ -70,3 +70,10 @@ explore: pricing_history {
 explore: cards_gameplay {
 
 }
+
+explore: creatures {
+  join: cards_gameplay {
+    sql_on: ${creatures.card_name}=${cards_gameplay.name} ;;
+    relationship: many_to_one
+  }
+}
