@@ -69,11 +69,35 @@ explore: pricing_history {
 
 explore: cards_gameplay {
 
-}
-
-explore: creatures {
-  join: cards_gameplay {
-    sql_on: ${creatures.card_name}=${cards_gameplay.name} ;;
+  sql_always_where: ${sets.set_type} = "core" OR ${sets.set_type}="expansion" ;;
+  join: behavior {
+    sql_on: ${cards_gameplay.name}=${behavior.name} ;;
+    relationship: one_to_many
+  }
+  join: subtypes_cards {
+    sql_on: ${cards_gameplay.name}=${subtypes_cards.card_name} ;;
+    relationship: one_to_many
+  }
+  join: sets {
+    sql_on: ${cards_gameplay.set_name}=${sets.name} ;;
     relationship: many_to_one
   }
 }
+#
+# explore: creatures {
+#   join: cards_gameplay {
+#     sql_on: ${creatures.card_name}=${cards_gameplay.name} ;;
+#     relationship: many_to_one
+#   }
+#   join: behavior {
+#     sql_on: ${creatures.card_name}=${behavior.name} ;;
+#     relationship: many_to_many
+#   }
+# }
+#
+# explore: instants {
+#   join: cards_gameplay {
+#     sql_on: ${instants.card_name}=${cards_gameplay.name} ;;
+#     relationship: many_to_one
+#   }
+# }

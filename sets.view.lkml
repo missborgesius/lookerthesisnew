@@ -7,6 +7,7 @@ view: sets {
   }
 
   dimension: block_code {
+    hidden: yes
     type: string
     sql: ${TABLE}.block_code ;;
   }
@@ -14,17 +15,20 @@ view: sets {
   dimension: card_count {
     type: number
     sql: ${TABLE}.card_count ;;
+    hidden: yes
   }
 
   dimension: code {
     type: string
     sql: ${TABLE}.code ;;
+    primary_key: yes
   }
 
-  dimension: icon_svg_uri {
-    type: string
+  dimension: set_symbol {
+    html: <img src="{{value}}" width="100" height="100"/> ;;
     sql: ${TABLE}.icon_svg_uri ;;
   }
+
 
   dimension: name {
     type: string
@@ -39,16 +43,13 @@ view: sets {
   dimension: parent_set_code {
     type: string
     sql: ${TABLE}.parent_set_code ;;
+    hidden: yes
   }
 
   dimension_group: released {
     type: time
     timeframes: [
-      raw,
       date,
-      week,
-      month,
-      quarter,
       year
     ]
     convert_tz: no
@@ -59,11 +60,13 @@ view: sets {
   dimension: search_uri {
     type: string
     sql: ${TABLE}.search_uri ;;
+    hidden: yes
   }
 
   dimension: set_type {
     type: string
     sql: ${TABLE}.set_type ;;
+    hidden: yes
   }
 
 
