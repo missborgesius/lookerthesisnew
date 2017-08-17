@@ -11,43 +11,43 @@ datagroup: prices_datagroup {
 datagroup: cards_datagroup {
   sql_trigger: 1 ;;
 }
-
-#Base Explores for PDTs
-explore: prices {
-  hidden: yes
-  persist_with: prices_datagroup
-  view_label: "xPrices"
-}
-
-explore: cards_flat {
-  hidden: yes
-  persist_with: cards_datagroup
-  view_label: "xCards"
-}
-
-explore: keywords {
-  hidden: yes
-  persist_with: cards_datagroup
-  view_label: "xKeywords"
-}
-
-explore: sets {
-  hidden: yes
-  persist_with: cards_datagroup
-  view_label: "xSets"
-}
-
-explore: subtypes {
-  hidden: yes
-  persist_with: cards_datagroup
-  view_label: "xSubtypes"
-}
-
-explore: types {
-  hidden: yes
-  persist_with: cards_datagroup
-  view_label: "xTypes"
-}
+#
+# #Base Explores for PDTs
+# explore: prices {
+#   hidden: yes
+#   persist_with: prices_datagroup
+#   view_label: "xPrices"
+# }
+#
+# explore: cards_flat {
+#   hidden: yes
+#   persist_with: cards_datagroup
+#   view_label: "xCards"
+# }
+#
+# explore: keywords {
+#   hidden: yes
+#   persist_with: cards_datagroup
+#   view_label: "xKeywords"
+# }
+#
+# explore: sets {
+#   hidden: yes
+#   persist_with: cards_datagroup
+#   view_label: "xSets"
+# }
+#
+# explore: subtypes {
+#   hidden: yes
+#   persist_with: cards_datagroup
+#   view_label: "xSubtypes"
+# }
+#
+# explore: types {
+#   hidden: yes
+#   persist_with: cards_datagroup
+#   view_label: "xTypes"
+# }
 
 #Useful Models
 
@@ -57,12 +57,20 @@ explore: current_price {
     sql_on: ${current_price.multiverse_id}=${cards_collection.multiverse_id} ;;
     relationship: one_to_one
   }
+  join: sets {
+    sql_on: ${cards_collection.set_id}=${sets.code} ;;
+    relationship: many_to_one
+  }
 }
 
 explore: pricing_history {
   persist_with: prices_datagroup
   join: cards_collection {
     sql_on: ${pricing_history.multiverse_id}=${cards_collection.multiverse_id} ;;
+    relationship: many_to_one
+  }
+  join: sets {
+    sql_on: ${cards_collection.set_id}=${sets.code} ;;
     relationship: many_to_one
   }
 }
@@ -89,7 +97,20 @@ explore: cards_gameplay {
 
 
 }
-explore: indexes {}
+explore: sets {
+  join: cards_gameplay {
+    sql_on: ${sets.name}=${cards_gameplay.set_name} ;;
+    relationship: one_to_many
+  }
+  join: behavior{
+    sql_on: ${cards_gameplay.name}=${behavior.name} ;;
+    relationship: one_to_many
+  }
+  join: indexes {
+    sql_on: ${cards_gameplay.name}=indexes.name ;;
+    relationship: one_to_one
+  }
+}
 #
 # explore: creatures {
 #   join: cards_gameplay {

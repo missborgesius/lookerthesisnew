@@ -66,7 +66,6 @@ view: sets {
   dimension: set_type {
     type: string
     sql: ${TABLE}.set_type ;;
-    hidden: yes
   }
 
 
