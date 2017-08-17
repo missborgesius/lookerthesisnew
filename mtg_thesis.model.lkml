@@ -82,7 +82,14 @@ explore: cards_gameplay {
     sql_on: ${cards_gameplay.set_name}=${sets.name} ;;
     relationship: many_to_one
   }
+  join: indexes {
+    sql_on: ${cards_gameplay.name}=indexes.name ;;
+    relationship: one_to_one
+  }
+
+
 }
+explore: indexes {}
 #
 # explore: creatures {
 #   join: cards_gameplay {

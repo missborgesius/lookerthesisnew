@@ -32,7 +32,6 @@ view: cards_gameplay {
                   WHEN type_line LIKE "%Land%" THEN "Non-Basic Land"
                  WHEN type_line LIKE "%Planeswalker%" THEN "Planeswalker"
                  WHEN type_line LIKE "%Plane%" THEN "Plane"
-
                   WHEN type_line LIKE "%Scheme%" THEN "Scheme"
                   WHEN type_Line LIKE "%Sorcery%" THEN "Sorcery"
                   WHEN type_line LIKE "%Conspiracy%" THEN "Conspiracy"
@@ -54,18 +53,18 @@ view: cards_gameplay {
   dimension: id {
     type: number
     primary_key: yes
-    hidden: yes
+
     sql: ${TABLE}.id ;;
   }
 
   dimension: toughness {
-    hidden:  yes
+
     type: string
     sql: ${TABLE}.toughness ;;
   }
 
   dimension: toughness_int {
-    label: " Toughness"
+    hidden: yes
     type: number
     sql: ${TABLE}.toughness_int ;;
   }
@@ -77,19 +76,19 @@ view: cards_gameplay {
   }
 
   dimension: power_int {
-    label: "Power"
+    hidden:  yes
     type: number
     sql: ${TABLE}.power_int ;;
   }
 
   dimension: loyalty {
-    hidden: yes
+
     type: number
     sql: ${TABLE}.loyalty ;;
   }
 
   dimension: loyalty_int {
-    label: "Loyalty"
+    hidden: yes
     type: number
     sql: ${TABLE}.loyalty_int ;;
   }
@@ -237,5 +236,71 @@ view: cards_gameplay {
     type: count
     drill_fields: [name, oracle_text,type_line]
   }
+
+  }
+
+  view: indexes {
+    derived_table: {
+      sql:
+      SELECT
+          ${cards_gameplay.SQL_TABLE_NAME}.card_name as name,
+          CASE WHEN ${cards_gameplay.SQL_TABLE_NAME}.loyalty_int is null then (${cards_gameplay.SQL_TABLE_NAME}.toughness_int+${cards_gameplay.SQL_TABLE_NAME}.power_int)
+          WHEN ${cards_gameplay.SQL_TABLE_NAME}.loyalty_int is not null then ${cards_gameplay.SQL_TABLE_NAME}.loyalty_int END AS strength_index,
+          CASE WHEN ${cards_gameplay.SQL_TABLE_NAME}.cmc=0 then 1
+          ELSE ${cards_gameplay.SQL_TABLE_NAME}.cmc END AS cmc,
+          count(behavior.behavior) as behavior_count
+          FROM ${cards_gameplay.SQL_TABLE_NAME}
+          JOIN hilary_thesis.behavior on ${cards_gameplay.SQL_TABLE_NAME}.card_name = behavior.name
+          group by 1,2,3;;
+    }
+
+  dimension: cmc {
+    label: "Indexed Converted Mana Cost"
+    type: number
+    sql: ${TABLE}.cmc;;
+  }
+
+  dimension: strength_index {
+    type: number
+    sql: ${TABLE}.strength_index ;;
+  }
+
+  dimension: behavior_count {
+    type: number
+    sql: ${TABLE}.behavior_count ;;
+  }
+
+  dimension: base_mana_index {
+    type: number
+    sql: ${strength_index}/${cmc} ;;
+  }
+
+
+  measure: max_mana_index {
+    type: max
+    sql: ${base_mana_index} ;;
+  }
+  measure: max_strength_index {
+    type: max
+    sql: ${strength_index} ;;
+  }
+
+    measure: min_mana_index {
+      type: min
+      sql: ${base_mana_index} ;;
+    }
+    measure: min_strength_index {
+      type: min
+      sql: ${strength_index} ;;
+    }
+
+    measure: avg_mana_index {
+      type: average
+      sql: ${base_mana_index} ;;
+    }
+    measure: avg_strength_index {
+      type: average
+      sql: ${strength_index} ;;
+    }
 
   }
