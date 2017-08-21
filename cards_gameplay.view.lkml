@@ -69,6 +69,16 @@ view: cards_gameplay {
     sql: ${TABLE}.toughness_int ;;
   }
 
+  dimension: has_text {
+    type: yesno
+    sql: ${oracle_text} is not null ;;
+  }
+
+  dimension: power_toughness {
+    type: string
+    sql: CONCAT(${power},"/",${toughness}) ;;
+  }
+
   dimension: power {
     hidden: yes
     type: string
@@ -95,8 +105,8 @@ view: cards_gameplay {
 
   dimension: cmc {
     label: "Converted Mana Cost"
-    type: number
-    sql: CAST(${TABLE}.cmc as FLOAT64) ;;
+    type: string
+    sql: CAST(${TABLE}.cmc as STRING) ;;
   }
 
 
@@ -234,7 +244,7 @@ view: cards_gameplay {
 
   measure: count {
     type: count
-    drill_fields: [name, oracle_text,type_line]
+    drill_fields: [name, oracle_text,type_line,mana_cost]
   }
 
   }
@@ -258,6 +268,12 @@ view: cards_gameplay {
     label: "Indexed Converted Mana Cost"
     type: number
     sql: ${TABLE}.cmc;;
+  }
+
+  measure: average_cmc{
+    label: "Average Converted Mana Cost"
+    type: average
+    sql: ${TABLE}.cmc ;;
   }
 
   dimension: strength_index {

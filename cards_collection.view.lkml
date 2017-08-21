@@ -106,5 +106,9 @@ view: cards_collection {
     html:<img src="{{value}}" width="336" height="468"/>;;
   }
 
+  measure: count {
+    type: count
+  }
+
 
 }

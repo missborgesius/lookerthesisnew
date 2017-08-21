@@ -15,7 +15,6 @@ view: sets {
   dimension: card_count {
     type: number
     sql: ${TABLE}.card_count ;;
-    hidden: yes
   }
 
   dimension: code {
@@ -33,6 +32,7 @@ view: sets {
   dimension: name {
     type: string
     sql: ${TABLE}.name ;;
+    drill_fields: [cards_gameplay.name,cards_gameplay.cmc,cards_gameplay.oracle_text]
   }
 
   dimension: object {
@@ -74,4 +74,5 @@ view: sets {
     type: count
     drill_fields: [name]
   }
+
 }
