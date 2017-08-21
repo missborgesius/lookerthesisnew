@@ -1,7 +1,13 @@
 view: cards_gameplay {
   derived_table: {
     sql_trigger_value: 1 ;;
-    sql:SELECT ROW_NUMBER() OVER (ORDER BY cards_flat.name) as id,
+    sql:-- raw sql results do not include filled-in values for 'cards_gameplay.has_text'
+
+
+-- generate derived table cards_gameplay
+-- running the following sql through the bigquery API to create table as select:
+-- Building mtg_thesis::cards_gameplay in dev mode on instance 353ba745759ae06280e04aa875a6da88
+SELECT ROW_NUMBER() OVER (ORDER BY cards_flat.name) as id,
                cards_flat.toughness as toughness,
               CASE WHEN toughness LIKE "%*%" OR toughness LIKE "%X%" THEN null
                 ELSE CAST(toughness as FLOAT64) END as toughness_int,
@@ -37,14 +43,18 @@ view: cards_gameplay {
                   WHEN type_line LIKE "%Conspiracy%" THEN "Conspiracy"
                   WHEN type_line LIKE "%Phenomenon%" THEN "Phenomenon"
                   ELSE null
-                  END as card_type
+                  END as card_type,
+                CASE WHEN toughness LIKE "%*%" OR toughness LIKE "%X%" THEN "Variable"
+                WHEN power LIKE "%*%" OR power LIKE "%X%" THEN "Variable"
+                ELSE CAST(CAST(power as FLOAT64)+CAST(toughness as FLOAT64) as STRING) END AS power_toughness_sum
                 FROM cards_flat
                 JOIN sets on cards_flat.set_id = sets.code
                 INNER JOIN (
                     SELECT sets.code, MIN(sets.released_at) as min_date
                     FROM sets
                     GROUP BY code) b ON sets.code = b.code AND released_at = b.min_date
-                GROUP BY 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+                GROUP BY 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+
 
         ;;
   }
@@ -77,6 +87,188 @@ view: cards_gameplay {
   dimension: power_toughness {
     type: string
     sql: CONCAT(${power},"/",${toughness}) ;;
+  }
+
+  dimension: power_toughness_sum {
+    type: string
+    sql: ${TABLE}.power_toughness_sum ;;
+  }
+
+  dimension: power_toughness_sum_string {
+    type: string
+    case: {
+      when: {
+        sql: ${power_toughness_sum} = "0";;
+        label: "00"
+        }
+      when: {
+        sql: ${power_toughness_sum}="1" ;;
+        label: "01"
+      }
+      when: {
+        sql: ${power_toughness_sum}="2" ;;
+        label: "02"
+      }
+      when: {
+        sql: ${power_toughness_sum} = "3";;
+        label: "03"
+      }
+      when: {
+        sql: ${power_toughness_sum}="4" ;;
+        label: "04"
+      }
+      when: {
+        sql: ${power_toughness_sum}="5" ;;
+        label: "05"
+      }
+      when: {
+        sql: ${power_toughness_sum}="6" ;;
+        label: "06"
+      }
+      when: {
+        sql: ${power_toughness_sum}="7" ;;
+        label: "07"
+      }
+      when: {
+        sql: ${power_toughness_sum} = "8";;
+        label: "08"
+      }
+      when: {
+        sql: ${power_toughness_sum}="9" ;;
+        label: "09"
+      }
+      when: {
+        sql: ${power_toughness_sum} = "10";;
+        label: "10"
+      }
+      when: {
+        sql: ${power_toughness_sum}="11" ;;
+        label: "11"
+      }
+      when: {
+        sql: ${power_toughness_sum}="12" ;;
+        label: "12"
+      }
+      when: {
+        sql: ${power_toughness_sum} = "13";;
+        label: "13"
+      }
+      when: {
+        sql: ${power_toughness_sum}="14" ;;
+        label: "14"
+      }
+      when: {
+        sql: ${power_toughness_sum}="15" ;;
+        label: "15"
+      }
+      when: {
+        sql: ${power_toughness_sum}="16" ;;
+        label: "16"
+      }
+      when: {
+        sql: ${power_toughness_sum}="17" ;;
+        label: "17"
+      }
+      when: {
+        sql: ${power_toughness_sum} = "18";;
+        label: "18"
+      }
+      when: {
+        sql: ${power_toughness_sum}="19" ;;
+        label: "19"
+      }
+      when: {
+        sql: ${power_toughness_sum} = "20";;
+        label: "20"
+      }
+      when: {
+        sql: ${power_toughness_sum}="21" ;;
+        label: "21"
+      }
+      when: {
+        sql: ${power_toughness_sum}="22" ;;
+        label: "22"
+      }
+      when: {
+        sql: ${power_toughness_sum} = "23";;
+        label: "23"
+      }
+      when: {
+        sql: ${power_toughness_sum}="24" ;;
+        label: "24"
+      }
+      when: {
+        sql: ${power_toughness_sum}="25" ;;
+        label: "25"
+      }
+      when: {
+        sql: ${power_toughness_sum}="26" ;;
+        label: "26"
+      }
+      when: {
+        sql: ${power_toughness_sum}="27" ;;
+        label: "27"
+      }
+      when: {
+        sql: ${power_toughness_sum} = "28";;
+        label: "28"
+      }
+      when: {
+        sql: ${power_toughness_sum}="29" ;;
+        label: "29"
+      }
+      when: {
+        sql: ${power_toughness_sum} = "30";;
+        label: "30"
+      }
+      when: {
+        sql: ${power_toughness_sum}="31" ;;
+        label: "31"
+      }
+      when: {
+        sql: ${power_toughness_sum}="32" ;;
+        label: "32"
+      }
+      when: {
+        sql: ${power_toughness_sum} = "33";;
+        label: "33"
+      }
+      when: {
+        sql: ${power_toughness_sum}="34" ;;
+        label: "34"
+      }
+      when: {
+        sql: ${power_toughness_sum}="35" ;;
+        label: "35"
+      }
+      when: {
+        sql: ${power_toughness_sum}="36" ;;
+        label: "36"
+      }
+      when: {
+        sql: ${power_toughness_sum}="37" ;;
+        label: "37"
+      }
+      when: {
+        sql: ${power_toughness_sum} = "38";;
+        label: "38"
+      }
+      when: {
+        sql: ${power_toughness_sum}="39" ;;
+        label: "39"
+      }
+      when: {
+        sql: ${power_toughness_sum}="Variable" ;;
+        label: "Variable"
+      }
+
+    }
+  }
+
+
+  dimension: sum_power_toughness {
+    type: string
+    sql: CONCAT(${power_toughness_sum_string}," - ",${power_toughness}) ;;
   }
 
   dimension: power {
@@ -244,7 +436,7 @@ view: cards_gameplay {
 
   measure: count {
     type: count
-    drill_fields: [name, oracle_text,type_line,mana_cost]
+    drill_fields: [name, oracle_text,type_line,mana_cost,power_toughness]
   }
 
   }
