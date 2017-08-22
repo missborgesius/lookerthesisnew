@@ -46,20 +46,24 @@ SELECT ROW_NUMBER() OVER (ORDER BY cards_flat.name) as id,
                   END as card_type,
                 CASE WHEN toughness LIKE "%*%" OR toughness LIKE "%X%" THEN "Variable"
                 WHEN power LIKE "%*%" OR power LIKE "%X%" THEN "Variable"
-                ELSE CAST(CAST(power as FLOAT64)+CAST(toughness as FLOAT64) as STRING) END AS power_toughness_sum
+                ELSE CAST(CAST(power as FLOAT64)+CAST(toughness as FLOAT64) as STRING) END AS power_toughness_sum,
+                cards_flat.image_uri as image_uri
                 FROM cards_flat
                 JOIN sets on cards_flat.set_id = sets.code
                 INNER JOIN (
                     SELECT sets.code, MIN(sets.released_at) as min_date
                     FROM sets
                     GROUP BY code) b ON sets.code = b.code AND released_at = b.min_date
-                GROUP BY 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+                GROUP BY 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
 
 
         ;;
   }
 
-
+  dimension: card_image {
+    sql: ${TABLE}.image_uri ;;
+    html:<img src="{{value}}" width="336" height="468"/>;;
+  }
   dimension: id {
     type: number
     primary_key: yes
@@ -455,6 +459,8 @@ SELECT ROW_NUMBER() OVER (ORDER BY cards_flat.name) as id,
           JOIN hilary_thesis.behavior on ${cards_gameplay.SQL_TABLE_NAME}.card_name = behavior.name
           group by 1,2,3;;
     }
+
+
 
   dimension: cmc {
     label: "Indexed Converted Mana Cost"

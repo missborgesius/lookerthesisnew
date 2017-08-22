@@ -111,6 +111,8 @@ explore: sets {
     relationship: one_to_one
   }
 }
+
+explore: cards_collection {}
 #
 # explore: creatures {
 #   join: cards_gameplay {
