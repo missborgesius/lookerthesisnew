@@ -321,7 +321,11 @@ SELECT ROW_NUMBER() OVER (ORDER BY cards_flat.name) as id,
   dimension: name {
     type: string
     sql: ${TABLE}.card_name ;;
-  }
+    link: {
+      label: "Card Detail Dashboard"
+      url: "https://dcl.dev.looker.com/dashboards/23?Name={{cards_gameplay.name._value|url_encode}}&ColorIdentity={{cards_gameplay.color_identity._value|url_encode}}&CMC={{cards_gameplay.cmc._value|url_encode}}&Power={{cards_gameplay.power_toughness._value|url_encode}}&Mana%20Cost={{cards_gameplay.mana_cost._value|url_encode}}"
+      }
+      }
 
   dimension: type_line {
     type: string

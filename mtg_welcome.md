@@ -44,3 +44,5 @@ My data comes from the scryfall API, which is an online database of all the magi
 I used a ruby script to extract and clean the data and to load it into a Bigquery Database. I used a ruby script (that is a work in progress!) to parse the Oracle_Text field of the data for card behaviors.
 
 When I started slicing and dicing, I decied to limit my initial exploration to **Creature** cards from **Expansions** and **Core Sets** - which comes to about 8,000 cards instead of 38,000. This might seem like a big jump, but many of those 38,000 cards are rarely or never played by actual magic players, because they are from promotional sets or have been banned.
+
+I would like to expand this to include othr kinds of cards, and to increase the sophistication of my text parsing to ensure more accurate results.
