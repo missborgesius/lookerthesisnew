@@ -305,6 +305,11 @@ SELECT ROW_NUMBER() OVER (ORDER BY cards_flat.name) as id,
     sql: CAST(${TABLE}.cmc as STRING) ;;
   }
 
+  dimension: cmc_int {
+    type: number
+    sql: ${cmc} ;;
+  }
+
 
 
 #
@@ -497,28 +502,34 @@ SELECT ROW_NUMBER() OVER (ORDER BY cards_flat.name) as id,
   measure: max_mana_index {
     type: max
     sql: ${base_mana_index} ;;
+    drill_fields: [cards_gameplay.name,cards_gameplay.oracle_text]
   }
   measure: max_strength_index {
     type: max
     sql: ${strength_index} ;;
+    drill_fields: [cards_gameplay.name,cards_gameplay.oracle_text]
   }
 
     measure: min_mana_index {
       type: min
       sql: ${base_mana_index} ;;
+      drill_fields: [cards_gameplay.name,cards_gameplay.oracle_text]
     }
     measure: min_strength_index {
       type: min
       sql: ${strength_index} ;;
+      drill_fields: [cards_gameplay.name,cards_gameplay.oracle_text]
     }
 
     measure: avg_mana_index {
       type: average
       sql: ${base_mana_index} ;;
+      drill_fields: [cards_gameplay.name,cards_gameplay.oracle_text]
     }
     measure: avg_strength_index {
       type: average
       sql: ${strength_index} ;;
+      drill_fields: [cards_gameplay.name,cards_gameplay.oracle_text]
     }
 
   }

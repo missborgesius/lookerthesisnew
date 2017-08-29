@@ -61,6 +61,10 @@ explore: current_price {
     sql_on: ${cards_collection.set_id}=${sets.code} ;;
     relationship: many_to_one
   }
+  join: cards_gameplay {
+    sql_on: ${cards_gameplay.name}=${cards_collection.card_name} ;;
+    relationship: one_to_many
+  }
 }
 
 explore: pricing_history {
@@ -71,6 +75,10 @@ explore: pricing_history {
   }
   join: sets {
     sql_on: ${cards_collection.set_id}=${sets.code} ;;
+    relationship: many_to_one
+  }
+  join: cards_gameplay {
+    sql_on: ${cards_collection.card_name}=${cards_gameplay.name} ;;
     relationship: many_to_one
   }
 }
@@ -92,6 +100,10 @@ explore: cards_gameplay {
   }
   join: indexes {
     sql_on: ${cards_gameplay.name}=indexes.name ;;
+    relationship: one_to_one
+  }
+  join: card_language {
+    sql_on: ${cards_gameplay.name}=${card_language.card_name} ;;
     relationship: one_to_one
   }
 
