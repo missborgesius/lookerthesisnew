@@ -60,6 +60,8 @@ SELECT ROW_NUMBER() OVER (ORDER BY cards_flat.name) as id,
         ;;
   }
 
+
+
   dimension: card_image {
     sql: ${TABLE}.image_uri ;;
     html:<img src="{{value}}" width="336" height="468"/>;;

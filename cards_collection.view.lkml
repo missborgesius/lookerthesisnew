@@ -19,6 +19,7 @@ view: cards_collection {
         FROM hilary_thesis.cards_flat
         JOIN hilary_thesis.sets ON cards_flat.set_id = sets.code;;
   }
+  suggestions: no
 
   dimension: id {
     type: number
